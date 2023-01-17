@@ -1,0 +1,23 @@
+# Set the version of docker compose to use
+version: '3.9'
+
+# The containers that compose the project
+services:
+  dbTest:
+    image: mysql
+    restart: always
+    container_name: t3-test-example-test
+    ports:
+      - '3310:3306'
+    environment:
+      MYSQL_ROOT_PASSWORD: prisma
+      MYSQL_DATABASE: t3-example-tests
+  dbDev:
+    image: mysql
+    restart: always
+    container_name: t3-test-example-dev
+    ports:
+      - '3311:3306'
+    environment:
+      MYSQL_ROOT_PASSWORD: prisma
+      MYSQL_DATABASE: t3-example-dev
