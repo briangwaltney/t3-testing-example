@@ -1,6 +1,14 @@
 import { createPublicCaller, createUser, resetDb } from "@/utils/testUtils";
 import { TRPCError } from "@trpc/server";
 
+
+/**
+ * These tests make real calls to the test db
+ * The db is a local docker container that is reset before each test
+ * This approach does not require mocking, but does require a running db
+ * With the local db, it is very fast and easy to write tests
+ */
+
 describe("example", () => {
   beforeEach(async () => {
     await resetDb();

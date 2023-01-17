@@ -1,22 +1,31 @@
 import { appRouter } from "@/server/api/root";
 import { createInnerTRPCContext } from "@/server/api/trpc";
+import type { User } from "@prisma/client";
 import cuid from "cuid";
 
+// This is a helper that can be used to manipulate the db directly in tests
 export const createCtx = () => {
   return createInnerTRPCContext({
     session: null,
   });
 };
 
+
+// This is a helper that can be used to make calls to the api when not logged in
 export const createPublicCaller = () => {
   return appRouter.createCaller(createCtx());
 };
 
-export const createUser = async () => {
+
+// This creates a real user in the database and returns an api caller that is logged in
+// properties can be passed in to override the default values
+// This has been useful for testing permissions for various users
+export const createUser = async (userData?: Partial<User>) => {
   const ctx = createCtx();
   const user = await ctx.prisma.user.create({
     data: {
       email: `${cuid()}@${cuid()}.test.com`,
+      ...userData
     },
   });
 
@@ -39,6 +48,8 @@ export const createUser = async () => {
   };
 };
 
+// This is a helper that can be used to reset the db before each test
+// It can also be used to seed the db with data if needed
 export const resetDb = async () => {
   const ctx = createCtx();
 

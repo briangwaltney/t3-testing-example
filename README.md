@@ -1,28 +1,47 @@
-# Create T3 App
+# Testing T3 App Example
 
-This is a [T3 Stack](https://create.t3.gg/) project bootstrapped with `create-t3-app`.
 
-## What's next? How do I make an app with this?
+## Purpose
 
-We try to keep this project as simple as possible, so you can start with just the scaffolding we set up for you, and add additional things later when they become necessary.
+I would like to see a working example of how to test trpc on the front and backend.
 
-If you are not familiar with the different technologies used in this project, please refer to the respective docs. If you still are in the wind, please join our [Discord](https://t3.gg/discord) and ask for help.
+This repo starts with a working backend test suite that makes live calls to a locally hosted db.
 
-- [Next.js](https://nextjs.org)
-- [NextAuth.js](https://next-auth.js.org)
-- [Prisma](https://prisma.io)
-- [Tailwind CSS](https://tailwindcss.com)
-- [tRPC](https://trpc.io)
+This approach has worked really well so far in production.
 
-## Learn More
+I am still struggling with how to test anything on the frontend. I would like to find a wrapper
+for the components and hooks that will let me render them with mocked data or let them call a 
+local database that is running like in the backend tests.
 
-To learn more about the [T3 Stack](https://create.t3.gg/), take a look at the following resources:
+I have tried several approaches to trpc wrapper, but as soon as that gets close to working,
+the next-auth session wrapper screws everything up for me and I get stuck.
 
-- [Documentation](https://create.t3.gg/)
-- [Learn the T3 Stack](https://create.t3.gg/en/faq#what-learning-resources-are-currently-available) — Check out these awesome tutorials
 
-You can check out the [create-t3-app GitHub repository](https://github.com/t3-oss/create-t3-app) — your feedback and contributions are welcome!
+## Setup
 
-## How do I deploy this?
+A `.env.test` file is required to start the tests.
 
-Follow our deployment guides for [Vercel](https://create.t3.gg/en/deployment/vercel), [Netlify](https://create.t3.gg/en/deployment/netlify) and [Docker](https://create.t3.gg/en/deployment/docker) for more information.
+The only required env variables are: 
+
+```
+NODE_ENV="test"
+DATABASE_URL="mysql://root:YOURPASSWORD@localhost:3310/t3-example-tests"
+```
+
+The port in the `DATABASE_URL` matches the `docker-compose.yml` file, but can be changed as needed, of course. Just be sure to change them in both locations.
+
+Setting up the db in any other way works too, but I found this to be fastest for a local environment that is easy to reset whenever required.
+
+To get the repo working, docker is required to create the test dbs
+With Docker running in the background, call `npm run docker:up`. 
+
+You can then migrate the prisma schema to the test db using `npm run migrate:test`.
+
+`npm run test` will start Vitest in watch mode and will show failing tests at the
+time of this writing. Those are the frontend tests that need wrappers for the 
+hooks and components.
+
+## Tools in use
+
+Vitest and React Testing Library are the testing utilities in use. I have got to this point with Jest on other projects, but the setup is more extensive as 
+testing environments for front and backend need to be set individually.
