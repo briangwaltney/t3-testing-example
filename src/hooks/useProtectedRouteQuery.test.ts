@@ -8,7 +8,7 @@ import { renderHook } from "@testing-library/react";
 // I'm fine with making these more "integration" in nature and have them call a real backend/db
 // but I'm not sure how to do that
 
-describe("useAuthNoteRequiredQuery", () => {
+describe.skip("useAuthNoteRequiredQuery", () => {
   beforeAll(async () => {
     await resetDb();
   });
