@@ -15,6 +15,6 @@ describe("useAuthNoteRequiredQuery", () => {
     // add fake users to db that will be returned
 
     const { result } = renderHook(() => useProtectedRouteQuery());
-    expect(result.current.data).not.toBeNull();
+    expect(result.current.data?.length).toBeGreaterThan(0)
   });
 });
