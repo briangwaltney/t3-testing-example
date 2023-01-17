@@ -1,4 +1,5 @@
 import { useAuthNotRequiredQuery } from "@/hooks/useAuthNotRequiredQuery";
+import { AllTheProviders } from "@/utils/testWrapper";
 import {renderHook} from '@testing-library/react'
 
 
@@ -7,10 +8,12 @@ import {renderHook} from '@testing-library/react'
 // to use to make these tests work
 // I'm fine with making these more "integration" in nature and have them call a real backend/db
 // but I'm not sure how to do that
-describe.skip("useAuthNotRequiredQuery", () => {
+describe("useAuthNotRequiredQuery", () => {
   test("should return data", async () => {
     const { result } = renderHook(() =>
-      useAuthNotRequiredQuery()
+      useAuthNotRequiredQuery(), {
+        wrapper: AllTheProviders
+      }
     );
     expect(result.current.data).toEqual("hello");
   });

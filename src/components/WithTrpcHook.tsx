@@ -1,8 +1,8 @@
-import { useAuthNoteRequiredQuery } from "@/hooks/useAuthNotRequiredQuery";
+import { useAuthNotRequiredQuery } from "@/hooks/useAuthNotRequiredQuery";
 import React from "react";
 
 export default function WithTrpcHook() {
-  const { data, isLoading } = useAuthNoteRequiredQuery();
+  const { data, isLoading } = useAuthNotRequiredQuery();
 
   if (isLoading) {
     return <div>Loading...</div>;
