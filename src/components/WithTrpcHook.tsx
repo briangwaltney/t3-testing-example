@@ -1,4 +1,4 @@
-import { useAuthNoteRequiredQuery } from "@/hooks/useAuthNoteRequiredQuery";
+import { useAuthNoteRequiredQuery } from "@/hooks/useAuthNotRequiredQuery";
 import React from "react";
 
 export default function WithTrpcHook() {

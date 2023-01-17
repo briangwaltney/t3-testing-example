@@ -1,4 +1,4 @@
-import { useAuthNoteRequiredQuery } from "@/hooks/useAuthNoteRequiredQuery";
+import { useAuthNotRequiredQuery } from "@/hooks/useAuthNotRequiredQuery";
 import {renderHook} from '@testing-library/react'
 
 
@@ -10,7 +10,7 @@ import {renderHook} from '@testing-library/react'
 describe("useAuthNoteRequiredQuery", () => {
   test("should return data", async () => {
     const { result } = renderHook(() =>
-      useAuthNoteRequiredQuery()
+      useAuthNotRequiredQuery()
     );
     expect(result.current.data).toEqual("hello");
   });
