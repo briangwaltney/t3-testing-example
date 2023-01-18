@@ -12,6 +12,7 @@ export const exampleRouter = createTRPCRouter({
     }),
 
   getAllUsers: protectedProcedure.query(({ ctx }) => {
+    console.log("session", ctx.session)
     return ctx.prisma.user.findMany();
   }),
 

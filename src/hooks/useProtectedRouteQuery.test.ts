@@ -1,6 +1,8 @@
 import { useProtectedRouteQuery } from "@/hooks/useProtectedRouteQuery";
-import { resetDb } from "@/utils/testUtils";
-import { renderHook } from "@testing-library/react";
+import { createCtx, resetDb } from "@/utils/testUtils";
+import { AllTheProviders } from "@/utils/testWrapper";
+import { renderHook, waitFor } from "@testing-library/react";
+import cuid from "cuid";
 
 
 // I know these tests are useless, but I would like to know what wrappers I need 
@@ -12,15 +14,30 @@ describe.skip("useAuthNoteRequiredQuery", () => {
   beforeAll(async () => {
     await resetDb();
   });
-  test("should return data", () => {
-    const { result } = renderHook(() => useProtectedRouteQuery());
-    expect(result.current.data).not.toBeNull();
+  test.skip("should return data", async () => {
+    const { result } = renderHook(() => useProtectedRouteQuery(), {
+      wrapper: AllTheProviders,
+    });
+
+    await waitFor(() => expect(result.current.isLoading).toBe(false));
+    expect(result.current.data).not.toBe(undefined);
   });
 
-  test("should return all users", () => {
-    // add fake users to db that will be returned
+  test.skip("should return all users",async () => {
+    const ctx = createCtx()
+    await ctx.prisma.user.createMany({
+      data: {
+        email: `${cuid()}@${cuid()}.test.com`,
+      }
+    })
 
-    const { result } = renderHook(() => useProtectedRouteQuery());
+    const { result } = renderHook(() => useProtectedRouteQuery(), {
+      wrapper: AllTheProviders,
+    });
+
+    await waitFor(() => expect(result.current.isSuccess).toBe(true));
+    await waitFor(() => expect(result.current.data?.length).toBeGreaterThan(0));
+
     expect(result.current.data?.length).toBeGreaterThan(0)
   });
 });
