@@ -12,7 +12,7 @@
     "migrate:test": "dotenv -e .env.test npx prisma db push",
     "docker:up": "docker-compose up -d",
     "docker:down": "docker-compose down",
-    "test": "dotenv -e .env.test vitest",
+    "test": "dotenv -e .env.test vitest --reporter=verbose",
     "start": "next start"
   },
   "dependencies": {

@@ -36,8 +36,8 @@ const trpcClient = (session: Session | null) =>
   testApi.createClient({
     links: [
       loggerLink({
-        enabled: (opts) =>
-          opts.direction === "down" && opts.result instanceof Error,
+        enabled: (opts) =>false
+          // opts.direction === "down" && opts.result instanceof Error,
       }),
       httpBatchLink({
         url: "http://localhost:3005/api/trpc",
