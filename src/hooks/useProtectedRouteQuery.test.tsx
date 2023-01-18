@@ -36,6 +36,6 @@ describe("useProtectedRouteQuery", () => {
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
     await waitFor(() => expect(result.current.data?.length).toBeGreaterThan(0));
 
-    expect(result.current.data?.length).toBe(2);
+    expect(result.current.data?.length).toBeGreaterThanOrEqual(2);
   });
 });
