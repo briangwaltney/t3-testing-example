@@ -9,7 +9,7 @@ import { TRPCError } from "@trpc/server";
  * With the local db, it is very fast and easy to write tests
  */
 
-describe.skip("example", () => {
+describe("example", () => {
   beforeEach(async () => {
     await resetDb();
   })

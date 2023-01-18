@@ -1,8 +1,6 @@
 import ProtectedRoute from "@/components/ProtectedRoute";
-import { createCtx, createUser, resetDb } from "@/utils/testUtils";
-import { cleanup, render, screen, testApi } from "@/utils/testWrapper";
-import cuid from "cuid";
-import Cookies from "js-cookie";
+import { createUser, resetDb } from "@/utils/testUtils";
+import { cleanup, render, screen } from "@/utils/testWrapper";
 
 describe("Component with trpc hook", () => {
   beforeEach(async () => {
@@ -10,23 +8,19 @@ describe("Component with trpc hook", () => {
   });
   afterEach(() => {
     cleanup();
+    vi.restoreAllMocks();
   });
   test("should render", async () => {
-    const { user, userCtx } = await createUser();
-    const session = await userCtx.prisma.session.create({
-      data: {
-        expires: new Date(2100, 1, 1),
-        sessionToken: cuid(),
-        userId: user.id,
-      },
+    const { user } = await createUser();
+
+    render(<ProtectedRoute />, {
+      session: user,
     });
 
-    render(<ProtectedRoute />);
-
-    // expect(screen.getByText("Loading...")).toBeInTheDocument();
+    expect(screen.getByText("Loading...")).toBeInTheDocument();
 
     const message = await screen.findByText(/data/i);
 
-    // expect(message).toBeInTheDocument();
+    expect(message).toBeInTheDocument();
   });
 });

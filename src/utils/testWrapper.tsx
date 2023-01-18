@@ -10,10 +10,10 @@ import type { ReactElement } from "react";
 import React from "react";
 import type { AppRouter } from "@/server/api/root";
 import fetch from "node-fetch";
-import { SessionProvider } from "next-auth/react";
 import type { Session } from "next-auth";
 import type { RenderOptions } from "@testing-library/react";
 import { render } from "@testing-library/react";
+import type { User } from "@prisma/client";
 
 // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-explicit-any
 const globalAny = global as any;
@@ -32,10 +32,11 @@ export const testApi = createTRPCReact<AppRouter>({
 });
 
 const queryClient = new QueryClient();
-const trpcClient = testApi.createClient({
+const trpcClient =(session: Session | null)=> testApi.createClient({
   links: [
     loggerLink({
-      enabled: (opts) => opts.direction === "down" && opts.result instanceof Error,
+      enabled: (opts) =>
+        opts.direction === "down" && opts.result instanceof Error,
     }),
     httpBatchLink({
       url: "http://localhost:3005/api/trpc",
@@ -45,6 +46,7 @@ const trpcClient = testApi.createClient({
           ...init,
         });
       },
+      ...(session ? { headers: { session: JSON.stringify(session) } } : {})
     }),
   ],
   transformer: SuperJSON,
@@ -55,13 +57,11 @@ export function TRPCTestClientProvider(props: {
   session: Session | null;
 }) {
   return (
-    <SessionProvider session={props.session}>
-      <testApi.Provider client={trpcClient} queryClient={queryClient}>
+      <testApi.Provider client={trpcClient(props.session)} queryClient={queryClient}>
         <QueryClientProvider client={queryClient}>
           {props.children}
         </QueryClientProvider>
       </testApi.Provider>
-    </SessionProvider>
   );
 }
 export const AllTheProviders: React.FC<{
@@ -78,12 +78,19 @@ export const AllTheProviders: React.FC<{
 const customRender = (
   ui: ReactElement,
   options?: Omit<RenderOptions, "wrapper"> & {
-    session?: Session;
+    session?: User;
   }
 ) => {
+  const session: Session | undefined = options?.session ? {
+    user: {
+      id: options.session.id,
+    },
+    expires: "12312313212313"
+  }: undefined;
+
   return render(ui, {
     wrapper: (props) => (
-      <AllTheProviders {...props} session={options?.session} />
+      <AllTheProviders {...props} session={session} />
     ),
     ...options,
   });

@@ -1,12 +1,12 @@
 import WithTrpcHook from "@/components/WithTrpcHook";
 import { cleanup, render, screen } from "@/utils/testWrapper";
 
-describe.skip("Component with trpc hook", () => {
+describe("Component with trpc hook", () => {
   afterEach(() => {
     cleanup();
   });
   test("should render", async () => {
-    render(<WithTrpcHook />)
+    render(<WithTrpcHook />);
 
     expect(screen.getByText("Loading...")).toBeInTheDocument();
 
