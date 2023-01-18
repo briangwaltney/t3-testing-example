@@ -5,7 +5,7 @@ import {
   httpBatchLink,
   loggerLink,
 } from "@trpc/react-query";
-import SuperJSON from "superjson";
+import superjson from "superjson";
 import type { ReactElement } from "react";
 import React from "react";
 import type { AppRouter } from "@/server/api/root";
@@ -32,7 +32,7 @@ export const testApi = createTRPCReact<AppRouter>({
 });
 
 const queryClient = new QueryClient();
-const trpcClient = (session: Session | null) =>
+const trpcClient = (session: Session | undefined) =>
   testApi.createClient({
     links: [
       loggerLink({
@@ -50,12 +50,12 @@ const trpcClient = (session: Session | null) =>
         ...(session ? { headers: { session: JSON.stringify(session) } } : {}),
       }),
     ],
-    transformer: SuperJSON,
+    transformer: superjson,
   });
 
 export function TRPCTestClientProvider(props: {
   children: React.ReactNode;
-  session: Session | null;
+  session?: Session 
 }) {
   return (
     <testApi.Provider
@@ -73,7 +73,7 @@ export const AllTheProviders: React.FC<{
   session?: Session;
 }> = ({ session, children }) => {
   return (
-    <TRPCTestClientProvider session={session ?? null}>
+    <TRPCTestClientProvider session={session}>
       {children}
     </TRPCTestClientProvider>
   );
@@ -83,7 +83,7 @@ export const createSession = (user: User): Session => ({
   user: {
     id: user.id,
   },
-  expires: "12312313212313",
+  expires: "2123-02-17T13:51:55.373Z",
 });
 
 const customRender = (
