@@ -14,7 +14,6 @@ import { SessionProvider } from "next-auth/react";
 import type { Session } from "next-auth";
 import type { RenderOptions } from "@testing-library/react";
 import { render } from "@testing-library/react";
-import Cookies from 'js-cookie'
 
 // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-explicit-any
 const globalAny = global as any;
@@ -46,11 +45,6 @@ const trpcClient = testApi.createClient({
           ...init,
         });
       },
-      headers:()=>{
-        return {
-          authorization: 'cld0qtrew0002qlgrbctv5942' 
-        }
-      }
     }),
   ],
   transformer: SuperJSON,
