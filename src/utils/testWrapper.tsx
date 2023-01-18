@@ -32,36 +32,40 @@ export const testApi = createTRPCReact<AppRouter>({
 });
 
 const queryClient = new QueryClient();
-const trpcClient =(session: Session | null)=> testApi.createClient({
-  links: [
-    loggerLink({
-      enabled: (opts) =>
-        opts.direction === "down" && opts.result instanceof Error,
-    }),
-    httpBatchLink({
-      url: "http://localhost:3005/api/trpc",
-      fetch: async (input, init?) => {
-        const fetch = getFetch();
-        return fetch(input, {
-          ...init,
-        });
-      },
-      ...(session ? { headers: { session: JSON.stringify(session) } } : {})
-    }),
-  ],
-  transformer: SuperJSON,
-});
+const trpcClient = (session: Session | null) =>
+  testApi.createClient({
+    links: [
+      loggerLink({
+        enabled: (opts) =>
+          opts.direction === "down" && opts.result instanceof Error,
+      }),
+      httpBatchLink({
+        url: "http://localhost:3005/api/trpc",
+        fetch: async (input, init?) => {
+          const fetch = getFetch();
+          return fetch(input, {
+            ...init,
+          });
+        },
+        ...(session ? { headers: { session: JSON.stringify(session) } } : {}),
+      }),
+    ],
+    transformer: SuperJSON,
+  });
 
 export function TRPCTestClientProvider(props: {
   children: React.ReactNode;
   session: Session | null;
 }) {
   return (
-      <testApi.Provider client={trpcClient(props.session)} queryClient={queryClient}>
-        <QueryClientProvider client={queryClient}>
-          {props.children}
-        </QueryClientProvider>
-      </testApi.Provider>
+    <testApi.Provider
+      client={trpcClient(props.session)}
+      queryClient={queryClient}
+    >
+      <QueryClientProvider client={queryClient}>
+        {props.children}
+      </QueryClientProvider>
+    </testApi.Provider>
   );
 }
 export const AllTheProviders: React.FC<{
@@ -75,26 +79,32 @@ export const AllTheProviders: React.FC<{
   );
 };
 
+export const createSession = (user: User): Session => ({
+  user: {
+    id: user.id,
+  },
+  expires: "12312313212313",
+});
+
 const customRender = (
   ui: ReactElement,
   options?: Omit<RenderOptions, "wrapper"> & {
-    session?: User;
+    user?: User;
   }
 ) => {
-  const session: Session | undefined = options?.session ? {
-    user: {
-      id: options.session.id,
-    },
-    expires: "12312313212313"
-  }: undefined;
+  const session = options?.user ? createSession(options.user) : undefined;
 
   return render(ui, {
-    wrapper: (props) => (
-      <AllTheProviders {...props} session={session} />
-    ),
+    wrapper: (props) => <AllTheProviders {...props} session={session} />,
     ...options,
   });
 };
+
+export const hookWrapper = (user?: User) =>
+  function wrapperOptions(props: { children: React.ReactNode }) {
+    const session = user ? createSession(user) : undefined;
+    return <AllTheProviders {...props} session={session} />;
+  };
 
 export * from "@testing-library/react";
 export { customRender as render };

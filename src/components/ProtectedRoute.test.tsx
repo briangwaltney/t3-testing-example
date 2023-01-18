@@ -13,9 +13,7 @@ describe("Component with trpc hook", () => {
   test("should render", async () => {
     const { user } = await createUser();
 
-    render(<ProtectedRoute />, {
-      session: user,
-    });
+    render(<ProtectedRoute />, { user: user });
 
     expect(screen.getByText("Loading...")).toBeInTheDocument();
 
