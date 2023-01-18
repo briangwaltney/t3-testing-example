@@ -20,6 +20,8 @@ describe("useProtectedRouteQuery", () => {
     expect(result.current.data).toBe(undefined);
   });
   test("should return all users", async () => {
+    await resetDb()
+    cleanup()
     const { user } = await createUser();
     const ctx = createCtx();
     await ctx.prisma.user.createMany({
