@@ -36,8 +36,8 @@ const trpcClient = (session: Session | undefined) =>
   testApi.createClient({
     links: [
       loggerLink({
-        enabled: (opts) =>false
-          // opts.direction === "down" && opts.result instanceof Error,
+        enabled: (opts) => false,
+        // opts.direction === "down" && opts.result instanceof Error,
       }),
       httpBatchLink({
         url: "http://localhost:3005/api/trpc",
@@ -55,7 +55,7 @@ const trpcClient = (session: Session | undefined) =>
 
 export function TRPCTestClientProvider(props: {
   children: React.ReactNode;
-  session?: Session 
+  session?: Session;
 }) {
   return (
     <testApi.Provider
