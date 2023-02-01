@@ -6,7 +6,6 @@
     "build": "next build",
     "dev": "next dev",
     "server:test": "dotenv -e .env.test -- next dev -p 3005",
-    "postinstall": "prisma generate",
     "lint": "next lint",
     "migrate:dev": "dotenv -e .env npx prisma db push",
     "migrate:test": "dotenv -e .env.test npx prisma db push",
