@@ -1,3 +1,4 @@
 wallaby.js
 jest.config.js
-jest.setup.js
+jest.setup.js 
+fetch-polyfill.js

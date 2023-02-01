@@ -54,5 +54,7 @@ export const resetDb = async () => {
   const ctx = createCtx();
 
   await ctx.prisma.user.deleteMany();
+  await ctx.prisma.session.deleteMany();
+  await ctx.prisma.account.deleteMany();
   await ctx.prisma.example.deleteMany();
 };

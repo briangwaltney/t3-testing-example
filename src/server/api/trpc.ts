@@ -70,6 +70,7 @@ import superjson from "superjson";
 const t = initTRPC.context<typeof createTRPCContext>().create({
   transformer: superjson,
   errorFormatter({ shape }) {
+    if(process.env.APP_ENV === "test") return null
     return shape;
   },
 });

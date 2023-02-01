@@ -4,5 +4,4 @@ export const useAuthNotRequiredQuery = () => {
   return api.example.hello.useQuery({
     text: "hello",
   });
-
 };
